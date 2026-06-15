@@ -14,14 +14,21 @@ export default function ErrorBoundary({
     // Log the error to an error reporting service in production
     console.error("Application Error:", error);
 
-    // Auto-reload on ChunkLoadError to fetch new static assets after a deployment
+    // Auto-reload once on ChunkLoadError to fetch new static assets after a deployment
     if (
       error.message?.includes("ChunkLoadError") ||
       error.message?.includes("Loading chunk") ||
       error.message?.includes("Failed to fetch dynamically imported module")
     ) {
+      const reloadKey = "karbala-chunk-reload-attempted";
+      if (sessionStorage.getItem(reloadKey)) return;
+
+      sessionStorage.setItem(reloadKey, "true");
       window.location.reload();
+      return;
     }
+
+    sessionStorage.removeItem("karbala-chunk-reload-attempted");
   }, [error]);
 
   return (
