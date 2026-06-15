@@ -57,7 +57,9 @@ export function GalleryGrid({ initialImages, totalCount }: GalleryGridProps) {
                 alt={image.alt_text || "معرض الصور"} 
                 fill
                 className="object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) calc(50vw - 3rem), (max-width: 1280px) calc(33vw - 3rem), 320px"
+                priority={index < 4}
+                quality={72}
               />
               
               {/* Gold Filter Layer (Inactive state) */}

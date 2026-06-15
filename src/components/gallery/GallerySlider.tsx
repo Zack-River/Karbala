@@ -172,6 +172,8 @@ export function GallerySlider({ images }: GallerySliderProps) {
                   fill
                   className="object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out"
                   sizes="(max-width: 768px) 280px, 320px"
+                  priority={index < 3}
+                  quality={72}
                 />
                 
                 {/* Gold Filter Layer (Inactive state) */}

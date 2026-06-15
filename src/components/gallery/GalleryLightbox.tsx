@@ -81,6 +81,7 @@ export function GalleryLightbox({
             className="object-contain drop-shadow-2xl"
             sizes="(max-width: 768px) 100vw, 80vw"
             priority
+            quality={82}
           />
         </div>
 

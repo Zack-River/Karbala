@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import type { QuizWithQuestions } from "@/types/database";
 import { QUIZ_MOTIVATIONAL_MESSAGES } from "@/constants";
 import { submitQuizAttempt } from "@/lib/actions/quiz-submit";
-import { startQuizAttempt } from "@/lib/actions/quiz-start";
 
 interface QuizTakerProps {
   quiz: QuizWithQuestions;
@@ -71,18 +70,32 @@ export function QuizTaker({ quiz }: QuizTakerProps) {
   };
 
   const handleStart = async () => {
+    if (starting || hasStarted) return;
+
     setStarting(true);
     setErrorMsg(null);
-    const result = await startQuizAttempt(quiz.id);
-    if (result.success) {
-      setHasStarted(true);
-      if (quiz.duration_minutes) {
-        setTimeRemaining(quiz.duration_minutes * 60);
+
+    try {
+      const response = await fetch("/api/quiz/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quizId: quiz.id }),
+      });
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setHasStarted(true);
+        if (quiz.duration_minutes) {
+          setTimeRemaining(quiz.duration_minutes * 60);
+        }
+      } else {
+        setErrorMsg(result.error || "حدث خطأ أثناء بدء الاختبار.");
       }
-    } else {
-      setErrorMsg(result.error || "حدث خطأ أثناء بدء الاختبار.");
+    } catch {
+      setErrorMsg("حدث خطأ في الاتصال. حاول مرة أخرى.");
+    } finally {
+      setStarting(false);
     }
-    setStarting(false);
   };
 
   // Timer tick logic
@@ -236,6 +249,7 @@ export function QuizTaker({ quiz }: QuizTakerProps) {
           عند نقرك على زر البدء، لن تتمكن من التراجع.
         </p>
         <button
+          type="button"
           onClick={handleStart}
           disabled={starting}
           className="px-10 py-4 text-lg bg-karbala-gold text-karbala-black font-kufi font-bold rounded-pill shadow-glow hover:bg-karbala-gold-light hover:-translate-y-1 hover:shadow-glow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
