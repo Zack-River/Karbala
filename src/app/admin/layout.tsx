@@ -1,12 +1,27 @@
 import React from "react";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { ADMIN_NAV_LINKS, SITE_NAME } from "@/constants";
 
-export default function AdminLayout({
+// Auth pages that should NOT show the sidebar
+const AUTH_PAGES = ["/admin/login", "/admin/forgot-password", "/admin/reset-password"];
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Read current pathname from the header set by middleware
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+
+  const isAuthPage = AUTH_PAGES.some((p) => pathname.startsWith(p));
+
+  // Auth pages (login, forgot-password, reset-password) render without sidebar
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col md:flex-row" dir="rtl">
       {/* Sidebar */}

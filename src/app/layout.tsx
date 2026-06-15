@@ -81,8 +81,6 @@ export default function RootLayout({
             })
           }}
         />
-        {/* Global Noise Overlay (if not applied via globals.css) */}
-        <div className="fixed inset-0 z-50 pointer-events-none opacity-[0.15] mix-blend-overlay" style={{ backgroundImage: "url('/noise-texture.png')" }}></div>
         <PageViewTracker />
         {children}
       </body>

@@ -42,8 +42,8 @@ export default async function GalleryPage() {
 
   return (
     <div className="pt-32 pb-24 min-h-screen bg-karbala-black relative">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[url('/noise-texture.png')] opacity-[0.03] pointer-events-none" />
+
+
       <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-karbala-gold/5 to-transparent pointer-events-none" />
 
       <div className="section-container relative z-10 text-center mb-16">

@@ -73,6 +73,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
+  // Set x-pathname header so layouts can reliably detect the current route
+  supabaseResponse.headers.set('x-pathname', request.nextUrl.pathname);
+
   return supabaseResponse
 }
 

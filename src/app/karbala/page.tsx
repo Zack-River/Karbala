@@ -71,7 +71,7 @@ export default async function KarbalaPage() {
       </section>
 
       <section className="section-spacing bg-[rgba(13,11,9,0.5)] border-y border-gold-subtle relative">
-        <div className="absolute inset-0 bg-[url('/noise-texture.png')] opacity-[0.03] pointer-events-none" />
+
         <div className="section-container relative z-10">
           <SectionDivider title="محتوى المنصة" />
 
@@ -141,7 +141,7 @@ export default async function KarbalaPage() {
       </section>
 
       <section className="section-spacing bg-[rgba(13,11,9,0.5)] border-t border-gold-subtle relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/noise-texture.png')] opacity-[0.03] pointer-events-none" />
+
         <div className="w-full relative z-10 pt-16 pb-8">
           <div className="section-container mb-12">
             <SectionDivider title="معرض الصور" />

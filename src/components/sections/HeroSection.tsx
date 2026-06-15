@@ -64,9 +64,8 @@ export function HeroSection({
       <div className="absolute inset-0 bg-gradient-to-b from-karbala-black/30 via-karbala-black/80 to-karbala-black z-[1]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(13,11,9,0.95)_100%)] z-[1]" />
       <div className="absolute inset-0 shadow-deep z-[1]" />
-      
-      {/* Noise Texture */}
-      <div className="absolute inset-0 opacity-[0.03] bg-[url('/noise-texture.png')] z-[2] pointer-events-none" />
+
+
 
       {/* Content */}
       <div className="relative z-10 text-center px-base flex flex-col items-center w-full max-w-4xl mx-auto pt-16 md:pt-24">
