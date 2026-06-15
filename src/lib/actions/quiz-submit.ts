@@ -143,12 +143,23 @@ export async function submitQuizAttempt(quizId: string, answers: Record<string, 
       }).eq("id", attemptId);
     }
 
-    // Clear the cookie so they can't re-submit
+    // Clear the active attempt cookie
     try {
       const cookieStore = await cookies();
       cookieStore.delete(`quiz_attempt_${quizId}`);
+      
+      // Set completed cookie (1 year expiry)
+      cookieStore.set(`quiz_completed_${quizId}`, JSON.stringify({
+        score: correctCount,
+        total: questionIds.length
+      }), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+      });
     } catch {
-      // Non-fatal — cookie will expire on its own
+      // Non-fatal
     }
 
     return {

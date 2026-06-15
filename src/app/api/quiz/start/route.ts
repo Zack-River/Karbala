@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 
 export async function POST(request: NextRequest) {
@@ -63,6 +64,15 @@ export async function POST(request: NextRequest) {
       .from("quiz_questions")
       .select("*", { count: "exact", head: true })
       .eq("quiz_id", quizId);
+
+    // Prevent starting if they already completed it
+    const cookieStore = await cookies();
+    if (cookieStore.get(`quiz_completed_${quizId}`)) {
+      return NextResponse.json(
+        { success: false, error: "لقد أتممت هذا الاختبار مسبقاً." },
+        { status: 403 }
+      );
+    }
 
     // For the INSERT, use the service role client to bypass RLS 
     // (fallback: use anon client which also has INSERT policy)

@@ -8,6 +8,8 @@ import { QuizCountdown } from "@/components/quiz/QuizCountdown";
 import { QuizStatsDisplay } from "@/components/quiz/QuizStatsDisplay";
 import type { Metadata } from "next";
 
+import { cookies } from "next/headers";
+
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
@@ -39,6 +41,22 @@ export default async function NightQuizPage({
   const isUpcoming = status === 'upcoming';
   const isClosed = status === 'closed';
   const hasQuestions = quizData.questions.length > 0;
+
+  // Check if user already completed this quiz
+  const cookieStore = await cookies();
+  const completedCookie = cookieStore.get(`quiz_completed_${quizData.id}`);
+  let previousScore = null;
+  let previousTotal = null;
+
+  if (completedCookie) {
+    try {
+      const data = JSON.parse(completedCookie.value);
+      previousScore = data.score;
+      previousTotal = data.total;
+    } catch {
+      // ignore
+    }
+  }
 
   return (
     <div className="pb-8xl">
@@ -80,6 +98,22 @@ export default async function NightQuizPage({
           <p className="font-kufi text-karbala-secondary text-center">
             الاختبار قيد الإعداد. عد لاحقاً.
           </p>
+        ) : completedCookie ? (
+          <div className="card-base p-8 text-center bg-[rgba(34,197,94,0.05)] border-green-500/30 max-w-lg mx-auto">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+              <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl text-green-400 font-scheherazade mb-3">لقد أتممت هذا الاختبار مسبقاً</h2>
+            {previousScore !== null && previousTotal !== null ? (
+              <p className="text-karbala-secondary font-kufi">
+                نتيجتك السابقة: <span className="text-karbala-gold font-bold">{previousScore}</span> من <span className="font-bold">{previousTotal}</span>
+              </p>
+            ) : (
+              <p className="text-karbala-secondary font-kufi">تم تسجيل إجاباتك بنجاح. شكراً لمشاركتك.</p>
+            )}
+          </div>
         ) : (
           <QuizTaker quiz={quizData} />
         )}
