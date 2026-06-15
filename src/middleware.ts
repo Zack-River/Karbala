@@ -73,6 +73,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
+  // Handle root redirect at the edge to prevent Server Component redirect errors
+  if (request.nextUrl.pathname === '/') {
+    const redirectUrl = getAbsoluteUrl('/karbala', request);
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // Set x-pathname header so layouts can reliably detect the current route
   supabaseResponse.headers.set('x-pathname', request.nextUrl.pathname);
 
