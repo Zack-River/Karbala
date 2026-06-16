@@ -66,9 +66,14 @@ export function NightCard({ night, isFeatured = false }: NightCardProps) {
             </Link>
 
             <div className="flex gap-2 flex-wrap relative z-20">
-              <div className="inline-flex items-center justify-center px-4 py-1.5 border border-karbala-gold rounded-pill bg-transparent text-karbala-gold text-[0.8rem] font-kufi group-hover:bg-[rgba(212,185,138,0.1)] group-hover:text-white transition-colors pointer-events-none">
+              <Link 
+                href={night.isLocked ? "#" : `/karbala/night/${night.slug}`}
+                className="inline-flex items-center justify-center px-4 py-1.5 border border-karbala-gold rounded-pill bg-transparent text-karbala-gold text-[0.8rem] font-kufi hover:bg-karbala-gold hover:text-karbala-dark group-hover:bg-[rgba(212,185,138,0.1)] group-hover:text-white transition-colors pointer-events-auto"
+                aria-disabled={night.isLocked}
+                onClick={(e) => night.isLocked && e.preventDefault()}
+              >
                 {night.isLocked ? "قريباً" : "تصفح الليلة"}
-              </div>
+              </Link>
 
               {hasQuiz && !night.isLocked && (
                 <QuizButton
