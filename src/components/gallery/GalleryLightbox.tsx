@@ -17,9 +17,13 @@ export function GalleryLightbox({
   onClose,
   onNavigate,
 }: GalleryLightboxProps) {
-  // Handle keyboard navigation
+  // Handle keyboard navigation and scroll lock
   useEffect(() => {
     if (selectedIndex === null) return;
+
+    // Lock body scroll
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -32,7 +36,10 @@ export function GalleryLightbox({
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
   }, [selectedIndex, images.length, onClose, onNavigate]);
 
   if (selectedIndex === null) return null;

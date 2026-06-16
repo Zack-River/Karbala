@@ -32,11 +32,17 @@ export function GalleryGrid({ initialImages, totalCount }: GalleryGridProps) {
       .order("created_at", { ascending: false })
       .range(from, to);
 
-    if (!error && data) {
-      setImages((prev) => [...prev, ...data]);
-      if (images.length + data.length >= totalCount) {
-        setHasMore(false);
-      }
+    if (error) {
+      console.error("Failed to load more images:", error);
+      setHasMore(false);
+    } else if (data) {
+      setImages((prev) => {
+        const next = [...prev, ...data];
+        if (next.length >= totalCount) {
+          setHasMore(false);
+        }
+        return next;
+      });
     }
 
     setIsLoading(false);

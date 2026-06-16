@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { createServerClient } from "@/lib/supabase/server";
+import { createActionClient } from "@/lib/supabase/action";
 
 export async function trackPageView(path: string) {
   try {
@@ -19,7 +19,7 @@ export async function trackPageView(path: string) {
       });
     }
 
-    const supabase = await createServerClient();
+    const supabase = await createActionClient();
     
     // De-duplicate: check if this session already viewed this path in the last 30 minutes
     const thirtyMinsAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();

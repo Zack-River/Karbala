@@ -59,7 +59,12 @@ export async function saveQuizAction(formData: FormData) {
         duration_minutes,
         motivational_message,
       }).select().single();
-      if (error) throw error;
+      if (error) {
+        if (error.code === '23505' && error.message?.includes('quizzes_night_id_key')) {
+          return { success: false, error: "هذه الليلة تحتوي على اختبار بالفعل. لا يمكن إضافة أكثر من اختبار لليلة الواحدة." };
+        }
+        throw error;
+      }
       quizId = data.id;
     }
 

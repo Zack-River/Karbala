@@ -96,9 +96,26 @@ export async function swapGalleryImagesAction(formData: FormData) {
 
   const supabase = await createActionClient();
 
-  // Update both rows
-  await supabase.from("gallery_images").update({ sort_order: order2 }).eq("id", id1);
-  await supabase.from("gallery_images").update({ sort_order: order1 }).eq("id", id2);
+  // Try using the RPC transaction first
+  const { error: rpcError } = await supabase.rpc("swap_gallery_image_orders", {
+    p_id1: id1,
+    p_id2: id2,
+    p_order1: order1,
+    p_order2: order2,
+  });
+
+  if (rpcError) {
+    // If the function doesn't exist (e.g. migration not run yet), fallback to separate updates
+    if (rpcError.code === "42883" || rpcError.message?.includes("function does not exist")) {
+      const { error: error1 } = await supabase.from("gallery_images").update({ sort_order: order2 }).eq("id", id1);
+      if (error1) return { success: false, error: "فشل تحديث ترتيب الصورة الأولى" };
+      
+      const { error: error2 } = await supabase.from("gallery_images").update({ sort_order: order1 }).eq("id", id2);
+      if (error2) return { success: false, error: "فشل تحديث ترتيب الصورة الثانية" };
+    } else {
+      return { success: false, error: "فشل تبديل الصور في قاعدة البيانات" };
+    }
+  }
 
   revalidatePath("/admin/gallery");
   revalidatePath("/karbala/gallery");

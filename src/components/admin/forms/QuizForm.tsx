@@ -111,7 +111,11 @@ export function QuizForm({ nights, existing }: QuizFormProps) {
             required
             className="w-full px-3 py-2 border rounded-md focus:ring-karbala-gold focus:border-karbala-gold"
           >
-            <option value="">-- اختر ليلة --</option>
+            {nights.length === 0 ? (
+              <option value="">-- جميع الليالي تحتوي على اختبارات --</option>
+            ) : (
+              <option value="">-- اختر ليلة --</option>
+            )}
             {nights.map((n) => (
               <option key={n.id} value={n.id}>الليلة {n.number}: {n.title}</option>
             ))}

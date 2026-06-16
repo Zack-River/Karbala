@@ -59,7 +59,7 @@ export function GalleryUploadForm() {
           type="file"
           id="image_file"
           name="image_file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           required
           className="w-full text-sm text-gray-500
             file:mr-0 file:ml-4 file:py-2 file:px-4

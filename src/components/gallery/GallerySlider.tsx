@@ -80,38 +80,15 @@ export function GallerySlider({ images }: GallerySliderProps) {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollContainerRef.current) return;
-    const isRtl = window.getComputedStyle(scrollContainerRef.current).direction === "rtl";
     const scrollAmount = 300; 
     
-    let delta = 0;
-    if (isRtl) {
-       delta = direction === "right" ? scrollAmount : -scrollAmount;
-    } else {
-       delta = direction === "right" ? scrollAmount : -scrollAmount;
-    }
+    // In modern browsers (Chrome, Firefox, Safari), scrollBy({ left: X }) 
+    // consistently maps X>0 to physical right and X<0 to physical left, 
+    // regardless of the RTL/LTR layout.
+    const delta = direction === "right" ? scrollAmount : -scrollAmount;
 
     scrollContainerRef.current.scrollBy({ left: delta, behavior: "smooth" });
   };
-
-  // Keyboard navigation for Lightbox
-  useEffect(() => {
-    if (selectedImageIndex === null) return;
-    
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setSelectedImageIndex(null);
-      } else if (e.key === "ArrowRight") {
-        // RTL logic: ArrowRight goes to PREVIOUS image
-        setSelectedImageIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
-      } else if (e.key === "ArrowLeft") {
-        // RTL logic: ArrowLeft goes to NEXT image
-        setSelectedImageIndex((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : prev));
-      }
-    };
-    
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImageIndex, images.length]);
 
   if (!images || images.length === 0) return null;
 
