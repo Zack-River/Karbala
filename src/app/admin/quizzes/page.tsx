@@ -84,7 +84,7 @@ export default async function AdminQuizzesPage() {
           {
             header: "يفتح في",
             accessor: (row) =>
-              row.opens_at ? new Date(row.opens_at).toLocaleString("ar") : "فوراً",
+              row.opens_at ? new Date(row.opens_at).toLocaleString("ar-SA", { timeZone: "Asia/Riyadh", dateStyle: "medium", timeStyle: "short" }) : "فوراً",
           },
           {
             header: "إجراءات",

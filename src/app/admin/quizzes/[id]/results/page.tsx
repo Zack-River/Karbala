@@ -63,7 +63,7 @@ export default async function QuizResultsPage({ params }: { params: { id: string
           },
           {
             header: "وقت التسليم",
-            accessor: (row) => row.submitted_at ? new Date(row.submitted_at).toLocaleString("ar") : "—",
+            accessor: (row) => row.submitted_at ? new Date(row.submitted_at).toLocaleString("ar-SA", { timeZone: "Asia/Riyadh", dateStyle: "medium", timeStyle: "short" }) : "—",
           },
         ]}
       />

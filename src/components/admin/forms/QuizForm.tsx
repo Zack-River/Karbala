@@ -69,10 +69,16 @@ export function QuizForm({ nights, existing }: QuizFormProps) {
     formData.append("questions", JSON.stringify(questions.filter((q) => q.question.trim())));
 
     const opensAtStr = formData.get("opens_at") as string;
-    if (opensAtStr) formData.set("opens_at", new Date(opensAtStr).toISOString());
+    if (opensAtStr) {
+      const formattedStr = opensAtStr.length === 16 ? `${opensAtStr}:00` : opensAtStr;
+      formData.set("opens_at", new Date(`${formattedStr}+03:00`).toISOString());
+    }
 
     const closesAtStr = formData.get("closes_at") as string;
-    if (closesAtStr) formData.set("closes_at", new Date(closesAtStr).toISOString());
+    if (closesAtStr) {
+      const formattedStr = closesAtStr.length === 16 ? `${closesAtStr}:00` : closesAtStr;
+      formData.set("closes_at", new Date(`${formattedStr}+03:00`).toISOString());
+    }
 
     const result = await saveQuizAction(formData);
     if (result.success) {
@@ -84,16 +90,15 @@ export function QuizForm({ nights, existing }: QuizFormProps) {
     }
   };
 
-  const toLocalISOString = (dateStr?: string | null) => {
+  const toMeccaISOString = (dateStr?: string | null) => {
     if (!dateStr) return "";
     const date = new Date(dateStr);
-    const offset = date.getTimezoneOffset() * 60000;
-    const localISOTime = new Date(date.getTime() - offset).toISOString().slice(0, 16);
-    return localISOTime;
+    const meccaTime = new Date(date.getTime() + 3 * 60 * 60 * 1000);
+    return meccaTime.toISOString().slice(0, 16);
   };
 
-  const opensAtDefault = toLocalISOString(existing?.opens_at);
-  const closesAtDefault = toLocalISOString(existing?.closes_at);
+  const opensAtDefault = toMeccaISOString(existing?.opens_at);
+  const closesAtDefault = toMeccaISOString(existing?.closes_at);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 font-kufi bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -128,12 +133,12 @@ export function QuizForm({ nights, existing }: QuizFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">تاريخ ووقت الفتح</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">تاريخ ووقت الفتح (بتوقيت مكة)</label>
           <input type="datetime-local" name="opens_at" defaultValue={opensAtDefault} className="w-full px-3 py-2 border rounded-md" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">تاريخ ووقت الإغلاق</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">تاريخ ووقت الإغلاق (بتوقيت مكة)</label>
           <input type="datetime-local" name="closes_at" defaultValue={closesAtDefault} className="w-full px-3 py-2 border rounded-md" />
         </div>
 
